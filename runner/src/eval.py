@@ -57,7 +57,6 @@ def evaluate(cfg: DictConfig) -> Tuple[dict, dict]:
     Returns:
         Tuple[dict, dict]: Dict with metrics and dict with all instantiated objects.
     """
-
     assert cfg.ckpt_path
 
     log.info(f"Instantiating datamodule <{cfg.datamodule._target_}>")

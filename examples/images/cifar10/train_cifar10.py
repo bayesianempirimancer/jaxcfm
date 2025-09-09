@@ -8,7 +8,6 @@ import os
 
 import torch
 from absl import app, flags
-from torchdyn.core import NeuralODE
 from torchvision import datasets, transforms
 from tqdm import trange
 from utils_cifar import ema, generate_samples, infiniteloop
@@ -98,9 +97,7 @@ def train(argv):
         num_head_channels=64,
         attention_resolutions="16",
         dropout=0.1,
-    ).to(
-        device
-    )  # new dropout + bs of 128
+    ).to(device)  # new dropout + bs of 128
 
     ema_model = copy.deepcopy(net_model)
     optim = torch.optim.Adam(net_model.parameters(), lr=FLAGS.lr)
