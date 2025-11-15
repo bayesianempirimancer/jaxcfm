@@ -1,6 +1,10 @@
 <div align="center">
 
-# TorchCFM: a Conditional Flow Matching library
+# JAXCFM: A JAX Reimplementation of TorchCFM
+
+**JAX/Flax Implementation of Conditional Flow Matching**
+
+This repository contains a **JAX/Flax reimplementation** of the [TorchCFM](https://github.com/atong01/conditional-flow-matching) library, providing a pure JAX implementation of Conditional Flow Matching methods with full JIT compilation support.
 
 <!---[![Conference](http://img.shields.io/badge/AnyConference-year-4b44ce.svg)](https://papers.nips.cc/paper/2020) -->
 
@@ -8,24 +12,38 @@
 
 [![OT-CFM Preprint](http://img.shields.io/badge/paper-arxiv.2302.00482-B31B1B.svg)](https://arxiv.org/abs/2302.00482)
 [![SF2M Preprint](http://img.shields.io/badge/paper-arxiv.2307.03672-B31B1B.svg)](https://arxiv.org/abs/2307.03672)
-[![pytorch](https://img.shields.io/badge/PyTorch_1.8+-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)
-[![lightning](https://img.shields.io/badge/-Lightning_1.6+-792ee5?logo=pytorchlightning&logoColor=white)](https://pytorchlightning.ai/)
-[![hydra](https://img.shields.io/badge/Config-Hydra_1.2-89b8cd)](https://hydra.cc/)
+[![JAX](https://img.shields.io/badge/JAX-0.4+-f4a460?logo=jax&logoColor=white)](https://jax.readthedocs.io/)
+[![Flax](https://img.shields.io/badge/Flax-0.7+-f4a460?logo=jax&logoColor=white)](https://flax.readthedocs.io/)
+[![Optax](https://img.shields.io/badge/Optax-0.1+-f4a460)](https://optax.readthedocs.io/)
+[![Diffrax](https://img.shields.io/badge/Diffrax-0.4+-f4a460)](https://docs.kidger.site/diffrax/)
 [![black](https://img.shields.io/badge/Code%20Style-Black-black.svg?labelColor=gray)](https://black.readthedocs.io/en/stable/)
 [![pre-commit](https://img.shields.io/badge/Pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![tests](https://github.com/atong01/conditional-flow-matching/actions/workflows/test.yaml/badge.svg)](https://github.com/atong01/conditional-flow-matching/actions/workflows/test.yaml)
-[![codecov](https://codecov.io/gh/atong01/conditional-flow-matching/branch/main/graph/badge.svg)](https://codecov.io/gh/atong01/conditional-flow-matching/)
-[![code-quality](https://github.com/atong01/conditional-flow-matching/actions/workflows/code-quality-main.yaml/badge.svg)](https://github.com/atong01/conditional-flow-matching/actions/workflows/code-quality-main.yaml)
-[![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](https://github.com/atong01/conditional-flow-matching#license)
-<a href="https://github.com/ashleve/lightning-hydra-template"><img alt="Template" src="https://img.shields.io/badge/-Lightning--Hydra--Template-017F2F?style=flat&logo=github&labelColor=gray"></a>
-[![Downloads](https://static.pepy.tech/badge/torchcfm)](https://pepy.tech/project/torchcfm)
-[![Downloads](https://static.pepy.tech/badge/torchcfm/month)](https://pepy.tech/project/torchcfm)
+[![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](LICENSE)
 
 </div>
 
 ## Description
 
-Conditional Flow Matching (CFM) is a fast way to train continuous normalizing flow (CNF) models. CFM is a simulation-free training objective for continuous normalizing flows that allows conditional generative modeling and speeds up training and inference. CFM's performance closes the gap between CNFs and diffusion models. To spread its use within the machine learning community, we have built a library focused on Flow Matching methods: TorchCFM. TorchCFM is a library showing how Flow Matching methods can be trained and used to deal with image generation, single-cell dynamics, tabular data and soon SO(3) data.
+**JAXCFM** is a JAX/Flax reimplementation of the [TorchCFM](https://github.com/atong01/conditional-flow-matching) library, originally developed by Alexander Tong, Kilian Fatras, and collaborators. This implementation provides:
+
+- **Pure JAX implementation** with full JIT compilation support
+- **No PyTorch dependencies** - completely framework-agnostic for the core algorithms
+- **Optimized for JAX** - uses `lax.scan`, `lax.while_loop`, and other JAX primitives for efficient execution
+- **All original features** - implements all Flow Matching variants from the original TorchCFM
+
+Conditional Flow Matching (CFM) is a fast way to train continuous normalizing flow (CNF) models. CFM is a simulation-free training objective for continuous normalizing flows that allows conditional generative modeling and speeds up training and inference. CFM's performance closes the gap between CNFs and diffusion models.
+
+### Acknowledgments and Credits
+
+This project is a **JAX reimplementation** of the excellent [TorchCFM](https://github.com/atong01/conditional-flow-matching) library. We are deeply grateful to the original TorchCFM team for their groundbreaking work:
+
+- **Original TorchCFM Authors**: [Alexander Tong](http://alextong.net), [Kilian Fatras](http://kilianfatras.github.io), and the entire TorchCFM team
+- **Original Repository**: [https://github.com/atong01/conditional-flow-matching](https://github.com/atong01/conditional-flow-matching)
+- **Original Papers**: 
+  - [Improving and generalizing flow-based generative models with minibatch optimal transport](https://arxiv.org/abs/2302.00482)
+  - [Simulation-free Schrödinger bridges via score and flow matching](https://arxiv.org/abs/2307.03672)
+
+This JAX implementation maintains the same API and functionality as the original PyTorch version, making it easy to switch between frameworks. All algorithms, architectures, and methodologies are based on the original TorchCFM implementation.
 
 <p align="center">
 <img src="assets/169_generated_samples_otcfm.png" width="600"/>
@@ -34,13 +52,11 @@ Conditional Flow Matching (CFM) is a fast way to train continuous normalizing fl
 
 The density, vector field, and trajectories of simulation-free CNF training schemes: mapping 8 Gaussians to two moons (above) and a single Gaussian to two moons (below). Action matching with the same architecture (3x64 MLP with SeLU activations) underfits with the ReLU, SiLU, and SiLU activations as suggested in the [example code](https://github.com/necludov/jam), but it seems to fit better under our training setup (Action-Matching (Swish)).
 
-The models to produce the GIFs are stored in `examples/models` and can be visualized with this notebook: [![notebook](https://img.shields.io/static/v1?label=Run%20in&message=Google%20Colab&color=orange&logo=Google%20Cloud)](https://colab.research.google.com/github/atong01/conditional-flow-matching/blob/master/examples/notebooks/model-comparison-plotting.ipynb).
+The models to produce the GIFs are stored in `examples/models` and can be visualized with the model comparison plotting notebook in `examples/2D_tutorials/model-comparison-plotting.ipynb`.
 
-We also have included an example of unconditional MNIST generation in `examples/notebooks/mnist_example.ipynb` for both deterministic and stochastic generation. [![notebook](https://img.shields.io/static/v1?label=Run%20in&message=Google%20Colab&color=orange&logo=Google%20Cloud)](https://colab.research.google.com/github/atong01/conditional-flow-matching/blob/master/examples/notebooks/mnist_example.ipynb).
+## The jaxcfm Package
 
-## The torchcfm Package
-
-In our version 1 update we have extracted implementations of the relevant flow matching variants into a package `torchcfm`. This allows abstraction of the choice of the conditional distribution `q(z)`. `torchcfm` supplies the following loss functions:
+This JAX reimplementation provides the `jaxcfm` package, which mirrors the functionality of the original `torchcfm` package but uses JAX/Flax instead of PyTorch. The package allows abstraction of the choice of the conditional distribution `q(z)`. `jaxcfm` supplies the following loss functions (matching the original TorchCFM API):
 
 - `ConditionalFlowMatcher`: $z = (x_0, x_1)$, $q(z) = q(x_0) q(x_1)$
 - `ExactOptimalTransportConditionalFlowMatcher`: $z = (x_0, x_1)$, $q(z) = \\pi(x_0, x_1)$ where $\\pi$ is an exact optimal transport joint. This is used in \[Tong et al. 2023a\] and \[Poolidan et al. 2023\] as "OT-CFM" and "Multisample FM with Batch OT" respectively.
@@ -48,9 +64,9 @@ In our version 1 update we have extracted implementations of the relevant flow m
 - `SchrodingerBridgeConditionalFlowMatcher`: $z = (x_0, x_1)$, $q(z) = \\pi\_\\epsilon(x_0, x_1)$ where $\\pi\_\\epsilon$ is an entropically regularized OT plan, although in practice this is often approximated by a minibatch OT plan (See Tong et al. 2023b). The flow-matching variant of this where the marginals are equivalent to the Schrodinger Bridge marginals is known as `SB-CFM` \[Tong et al. 2023a\]. When the score is also known and the bridge is stochastic is called \[SF\]2M \[Tong et al. 2023b\]
 - `VariancePreservingConditionalFlowMatcher`: $z = (x_0, x_1)$ $q(z) = q(x_0) q(x_1)$ but with conditional Gaussian probability paths which preserve variance over time using a trigonometric interpolation as presented in \[Albergo et al. 2023a\].
 
-## How to cite
+## Citation
 
-This repository contains the code to reproduce the main experiments and illustrations of two preprints:
+**Please cite the original TorchCFM papers** when using this JAX implementation. This repository is a reimplementation of the code from the original TorchCFM repository, which contains the code to reproduce the main experiments and illustrations of two preprints:
 
 - [Improving and generalizing flow-based generative models with minibatch optimal transport](https://arxiv.org/abs/2302.00482). We introduce **Optimal Transport Conditional Flow Matching** (OT-CFM), a CFM variant that approximates the dynamical formulation of optimal transport (OT). Based on OT theory, OT-CFM leverages the static optimal transport plan as well as the optimal probability paths and vector fields to approximate dynamic OT.
 - [Simulation-free Schrödinger bridges via score and flow matching](https://arxiv.org/abs/2307.03672). We propose **Simulation-Free Score and Flow Matching** (\[SF\]<sup>2</sup>M). \[SF\]<sup>2</sup>M leverages OT-CFM as well as score-based methods to approximate Schrödinger bridges, a stochastic version of optimal transport.
@@ -117,34 +133,28 @@ List of implemented papers:
 
 ## How to run
 
-Run a simple minimal example here [![Run in Google Colab](https://img.shields.io/static/v1?label=Run%20in&message=Google%20Colab&color=orange&logo=Google%20Cloud)](https://colab.research.google.com/github/atong01/conditional-flow-matching/blob/master/examples/notebooks/training-8gaussians-to-moons.ipynb). Or install the more efficient code locally with these steps.
-
-TorchCFM is now on [pypi](https://pypi.org/project/torchcfm/)! You can install it with:
-
-```bash
-pip install torchcfm
-```
-
-To use the full library with the different examples, you can install dependencies:
+This JAX implementation provides the same functionality as the original TorchCFM, but uses JAX/Flax instead of PyTorch. To install and use:
 
 ```bash
 # clone project
-git clone https://github.com/atong01/conditional-flow-matching.git
-cd conditional-flow-matching
+git clone https://github.com/bayesianempirimancer/jaxcfm.git
+cd jaxcfm
 
 # [OPTIONAL] create conda environment
-conda create -n torchcfm python=3.10
-conda activate torchcfm
+conda create -n jaxcfm python=3.10
+conda activate jaxcfm
 
-# install pytorch according to instructions
-# https://pytorch.org/get-started/
+# install JAX according to instructions
+# https://jax.readthedocs.io/en/latest/installation.html
 
 # install requirements
 pip install -r requirements.txt
 
-# install torchcfm
+# install jaxcfm
 pip install -e .
 ```
+
+**Note**: For the original PyTorch implementation, see the [official TorchCFM repository](https://github.com/atong01/conditional-flow-matching) and install via `pip install torchcfm`.
 
 To run our jupyter notebooks, use the following commands after installing our package.
 
@@ -153,9 +163,9 @@ To run our jupyter notebooks, use the following commands after installing our pa
 conda install -c anaconda ipykernel
 
 # install conda env in jupyter notebook
-python -m ipykernel install --user --name=torchcfm
+python -m ipykernel install --user --name=jaxcfm
 
-# launch our notebooks with the torchcfm kernel
+# launch our notebooks with the jaxcfm kernel
 ```
 
 ## Project Structure
@@ -163,20 +173,24 @@ python -m ipykernel install --user --name=torchcfm
 The directory structure looks like this:
 
 ```
-
 │
-├── examples              <- Jupyter notebooks
-|   ├── cifar10           <- Cifar10 experiments
-│   ├── notebooks         <- Diverse examples with notebooks
+├── examples              <- Jupyter notebooks (JAX versions)
+│   ├── 2D_tutorials      <- 2D flow matching tutorials (JAX)
+│   ├── images             <- Image generation examples (JAX)
 │
-│── runner                    <- Everything related to the original version (V0) of the library
-│
-|── torchcfm                  <- Code base of our Flow Matching methods
-|   ├── conditional_flow_matching.py      <- CFM classes
-│   ├── models                            <- Model architectures
+├── jaxcfm                  <- JAX/Flax implementation of Flow Matching methods
+│   ├── conditional_flow_matching.py      <- CFM classes (JAX version)
+│   ├── optimal_transport.py              <- Pure JAX OT implementations
+│   ├── models                            <- Model architectures (Flax)
 │   │   ├── models                           <- Models for 2D examples
-│   │   ├── Unet                             <- Unet models for image examples
-|
+│   │   ├── unet                            <- UNet models for image examples
+│
+├── torchcfm                  <- Original PyTorch implementation (for reference)
+│   ├── conditional_flow_matching.py      <- Original CFM classes (PyTorch)
+│   ├── models                            <- Original model architectures (PyTorch)
+│
+├── runner                    <- Everything related to the original version (V0) of the library
+│
 ├── .gitignore                <- List of files ignored by git
 ├── .pre-commit-config.yaml   <- Configuration of pre-commit hooks for code formatting
 ├── pyproject.toml            <- Configuration options for testing and linting
@@ -185,19 +199,35 @@ The directory structure looks like this:
 └── README.md
 ```
 
-## ❤️  Code Contributions
+## ❤️  Credits and Acknowledgments
 
-This toolbox has been created and is maintained by
+### Original TorchCFM Team
 
-- [Alexander Tong](http://alextong.net)
-- [Kilian Fatras](http://kilianfatras.github.io)
+This JAX implementation is based on the excellent work of the original TorchCFM team:
 
-It was initiated from a larger private codebase which loses the original commit history which contains work from other authors of the papers.
+- **[Alexander Tong](http://alextong.net)** - Original TorchCFM creator and maintainer
+- **[Kilian Fatras](http://kilianfatras.github.io)** - Original TorchCFM co-creator and maintainer
+- **All TorchCFM contributors** - For the original PyTorch implementation and research
+
+The original TorchCFM repository can be found at: [https://github.com/atong01/conditional-flow-matching](https://github.com/atong01/conditional-flow-matching)
+
+### JAX Reimplementation
+
+This JAX/Flax reimplementation maintains the same API and functionality as the original, making it easy to switch between PyTorch and JAX frameworks. All algorithms, methodologies, and research contributions are based on the original TorchCFM work.
+
+**Key differences from TorchCFM:**
+- Pure JAX/Flax implementation (no PyTorch dependencies)
+- Full JIT compilation support
+- Uses JAX primitives (`lax.scan`, `lax.while_loop`) for efficiency
+- Pure JAX implementations of optimal transport algorithms (no NumPy/scipy dependencies in core code)
+
+### Contributing
 
 Before making an issue, please verify that:
 
 - The problem still exists on the current `main` branch.
 - Your python dependencies are updated to recent versions.
+- For issues related to the original algorithms, consider also checking the [original TorchCFM repository](https://github.com/atong01/conditional-flow-matching).
 
 Suggestions for improvements are always welcome!
 
@@ -208,7 +238,8 @@ Conditional-Flow-Matching is licensed under the MIT License.
 ```
 MIT License
 
-Copyright (c) 2023 Alexander Tong
+Copyright (c) 2023 Alexander Tong (Original TorchCFM)
+Copyright (c) 2024 JAXCFM Contributors (JAX Reimplementation)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

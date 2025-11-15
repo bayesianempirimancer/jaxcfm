@@ -1,15 +1,52 @@
-torch>=1.11.0
+# JAX/Flax dependencies for conditional-flow-matching
+# 
+# Note: If you're using a NumPyro conda environment, it typically already includes:
+#   - jax, jaxlib (core JAX)
+#   - numpy, scipy (scientific computing)
+#   - matplotlib (visualization)
+# 
+# You'll need to install the additional packages listed below.
+# Run: python check_jax_dependencies.py to check what's missing.
+
+# Core JAX ecosystem
+jax>=0.4.0
+jaxlib>=0.4.0
+flax>=0.7.0
+
+# Optimizers (for training)
+optax>=0.1.0
+
+# ODE solving (for flow integration)
+# Note: diffrax is recommended but jax.experimental.ode can be used as alternative
+diffrax>=0.4.0
+
+# Scientific computing
+numpy>=1.21.0
+scipy>=1.7.0
+scikit-learn>=1.0.0
+
+# Optimal Transport (for testing purposes)
+pot>=0.9.0
+
+# Visualization
+matplotlib>=3.5.0
+
+# Testing
+pytest>=7.0.0
+
+# Examples dependencies
+absl-py>=0.15.0
+tqdm>=4.62.0
+
+# Optional: For CIFAR10 examples (data loading)
+# torchvision is only needed if using torch DataLoader for compatibility
+# For pure JAX, consider using tensorflow-datasets or other alternatives
 torchvision>=0.11.0
 
-lightning-bolts
-matplotlib
-numpy
-scipy
-scikit-learn
-scprep
-scanpy
-torchdyn>=1.0.6   # 1.0.4 is broken on pypi
-pot
-torchdiffeq
-absl-py
-clean-fid
+# Optional: For FID computation in examples
+clean-fid>=0.1.0
+
+# Optional: For single-cell examples (if needed)
+# scprep>=1.1.0
+# scanpy>=1.9.0
+
